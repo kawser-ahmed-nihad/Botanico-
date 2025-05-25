@@ -7,7 +7,7 @@ const PlantDetails = () => {
     const [plant, setPlant] = useState(null);
 
     useEffect(() => {
-        fetch(`https://plants-self-iota.vercel.app/plants/${id}`)
+        fetch(`https://one0-85jk.onrender.com/plants/${id}`)
             .then(res => res.json())
             .then(data => setPlant(data));
     }, [id]);

@@ -6,7 +6,7 @@ const AllPlants = () => {
     const [sortBy, setSortBy] = useState("");
 
     useEffect(() => {
-        fetch("https://plants-self-iota.vercel.app/plants")
+        fetch("https://one0-85jk.onrender.com/plants")
             .then((res) => res.json())
             .then((data) => setPlants(data));
     }, []);

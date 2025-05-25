@@ -11,7 +11,7 @@ const UpdatePlant = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`https://plants-zaazzm9jr-kawser-s-projects.vercel.app/plants/${id}`)
+    fetch(`https://one0-85jk.onrender.com/plants/${id}`)
       .then(res => res.json())
       .then(data => setPlant(data))
       .catch(() => toast.error('Failed to load plant data'));
@@ -34,7 +34,7 @@ const UpdatePlant = () => {
     };
 
     try {
-      const res = await fetch(`https://plants-self-iota.vercel.app/plants/${id}`, {
+      const res = await fetch(`https://one0-85jk.onrender.com/plants/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedPlant),

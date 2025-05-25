@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-        loader: () => fetch('https://plants-self-iota.vercel.app/plants'),
+        loader: () => fetch('https://one0-85jk.onrender.com/plants'),
         hydrateFallbackElement: <Loader></Loader>
 
       },

@@ -29,7 +29,7 @@ const AddPlant = () => {
     };
 
     try {
-      const res = await fetch('https://plants-self-iota.vercel.app/plants', {
+      const res = await fetch('https://one0-85jk.onrender.com/plants', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPlant),

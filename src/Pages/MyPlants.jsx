@@ -13,7 +13,7 @@ const MyPlants = () => {
   useEffect(() => {
     if (user?.email) {
       setLoading(true);
-      fetch(`https://plants-self-iota.vercel.app/myplants?email=${user.email}`)
+      fetch(`https://one0-85jk.onrender.com/myplants?email=${user.email}`)
         .then(res => res.json())
         .then(data => {
           setPlants(data);

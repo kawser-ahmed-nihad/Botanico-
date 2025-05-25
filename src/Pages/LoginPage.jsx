@@ -21,7 +21,7 @@ const LoginPage = () => {
         };
 
         try {
-            const res = await fetch("https://plants-self-iota.vercel.app/users", {
+            const res = await fetch("https://one0-85jk.onrender.com/users", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
