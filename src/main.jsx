@@ -5,15 +5,15 @@ import App from './App.jsx';
 import { RouterProvider } from 'react-router';
 import { router } from './Routes/Routes.jsx';
 import AuthProvider from './Context/AuthProvider.jsx';
-import ThemeProvider from './Context/ThemeProvider .jsx';
+import DarkModeProvider from './Context/DarkModeProvider.jsx';
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <ThemeProvider>
+      <DarkModeProvider>
         <RouterProvider router={router} />
-      </ThemeProvider>
+      </DarkModeProvider>
     </AuthProvider>
-  </StrictMode>
+  </StrictMode>,
 );

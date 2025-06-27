@@ -1,95 +1,90 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../Context/AuthContext';
 import { Helmet } from 'react-helmet';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Loader from '../components/Loader';
 
 const Profile = () => {
-    const { user, updateUser, setUser } = useContext(AuthContext);
-    const [newName, setNewName] = useState(user?.displayName || '');
+  const { user } = useContext(AuthContext);
+  const [userPlants, setUserPlants] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (user?.email) {
+      fetch(`https://one0-85jk.onrender.com/myplants?email=${user.email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUserPlants(data);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
+  }, [user]);
 
-    const [newPhotoURL, setNewPhotoURL] = useState(user?.photoURL || '');
+  if (loading) return <Loader />;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await updateUser({
-                displayName: newName,
-                photoURL: newPhotoURL,
-            });
+  return (
+    <>
+      <Helmet>
+        <title>Botanico | User Dashboard</title>
+      </Helmet>
+      <div className="max-w-4xl mx-auto p-6 space-y-6">
+        {/* Profile Section */}
+        <div className="bg-white rounded-xl shadow-md flex flex-col items-center text-center p-6">
+          <img
+            src={user?.photoURL || 'https://i.ibb.co/JvYHcXk/default-user.png'}
+            alt="User"
+            className="w-28 h-28 rounded-full object-cover border-4 border-green-400 mb-4"
+          />
+          <h2 className="text-2xl font-bold text-gray-800">{user?.displayName || 'Anonymous User'}</h2>
+          <p className="text-gray-600">{user?.email}</p>
+          <p className="text-sm text-green-500 mt-1">Role: User</p>
+        </div>
 
-            setUser((prevUser) => ({
-                ...prevUser,
-                displayName: newName,
-                photoURL: newPhotoURL,
-            }));
-            toast.success("Profile updated successfully!");
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="bg-green-100 border border-green-400 text-green-700 text-center py-6 rounded-lg shadow">
+            <p className="text-sm">Total Plants Added</p>
+            <p className="text-3xl font-bold">{userPlants.length}</p>
+          </div>
+          <div className="bg-blue-100 border border-blue-400 text-blue-700 text-center py-6 rounded-lg shadow">
+            <p className="text-sm">Verified Email</p>
+            <p className="text-xl font-semibold">{user?.emailVerified ? 'Yes' : 'No'}</p>
+          </div>
+          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 text-center py-6 rounded-lg shadow">
+            <p className="text-sm">Account Status</p>
+            <p className="text-xl font-semibold">Active</p>
+          </div>
+        </div>
 
-        } catch (error) {
-            toast.error("Update failed!");
-
-        }
-    };
-
-    return (
-        <>
-            <Helmet>
-                <title>App Store || Profile</title>
-            </Helmet>
-            <ToastContainer />
-            <div className="container mx-auto my-60">
-                <div className="bg-white shadow rounded-lg w-5/6 md:w-5/6 lg:w-4/6 xl:w-3/6 mx-auto relative">
-                    <div className="flex justify-center">
-                        <img
-                            src={user?.photoURL}
-                            alt="Avatar"
-                            className="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transform hover:scale-110 transition duration-200"
-                        />
-                    </div>
-
-                    <div className="mt-16 p-6">
-                        <h1 className="font-bold text-center text-3xl text-gray-900">{user?.email}</h1>
-                        <p className="text-center text-sm text-gray-400 font-medium">
-                            {user?.displayName || 'No name set'}
-                        </p>
-
-                        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Update Name</label>
-                                    <input
-                                        type="text"
-
-                                        onChange={(e) => setNewName(e.target.value)}
-                                        required
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Update Photo URL</label>
-                                    <input
-                                        type="text"
-
-                                        onChange={(e) => setNewPhotoURL(e.target.value)}
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                    />
-                                </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="w-full py-2 px-4 bg-green-500 text-white font-medium rounded-md"
-                            >
-                                Update Profile
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+        {/* Plant Preview Table */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <h3 className="text-lg font-semibold mb-2">Your Added Plants</h3>
+          {userPlants.length === 0 ? (
+            <p className="text-gray-500">You haven't added any plants yet.</p>
+          ) : (
+            <table className="w-full text-sm table-auto border border-gray-200">
+              <thead>
+                <tr className="bg-gray-100 text-left">
+                  <th className="p-2 border">Name</th>
+                  <th className="p-2 border">Category</th>
+                  <th className="p-2 border">Next Watering</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userPlants.slice(0, 5).map((plant) => (
+                  <tr key={plant._id} className="hover:bg-gray-50">
+                    <td className="p-2 border">{plant.name}</td>
+                    <td className="p-2 border">{plant.category}</td>
+                    <td className="p-2 border">{plant.nextWateringDate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Profile;

@@ -43,7 +43,7 @@ const UpdatePlant = () => {
       const data = await res.json();
       if (data.modifiedCount > 0) {
         toast.success('Plant updated successfully!');
-        setTimeout(() => navigate('/my-plants'), 1500);
+        setTimeout(() => navigate('/dashbord/my-plants'), 1500); 
       } else {
         toast.warn('No changes were made!');
       }
@@ -54,7 +54,7 @@ const UpdatePlant = () => {
     }
   };
 
-  if (!plant) return <Loader></Loader>;
+  if (!plant) return <Loader />;
 
   return (
     <div className="max-w-2xl mx-auto p-4">
@@ -85,7 +85,6 @@ const UpdatePlant = () => {
 
         <input name="healthStatus" type="text" defaultValue={plant.healthStatus} className="input input-bordered w-full" required />
 
-        
         <input name="userName" type="text" value={plant.userName} readOnly className="input input-bordered w-full bg-gray-100" />
         <input name="userEmail" type="text" value={plant.userEmail} readOnly className="input input-bordered w-full bg-gray-100" />
 

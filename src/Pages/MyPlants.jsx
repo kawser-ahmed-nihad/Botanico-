@@ -2,17 +2,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../Context/AuthContext';
 import { useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
-import Loader from '../components/Loader'; 
+import Loader from '../components/Loader';
 
 const MyPlants = () => {
   const { user } = useContext(AuthContext);
   const [plants, setPlants] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user?.email) {
-      setLoading(true);
       fetch(`https://one0-85jk.onrender.com/myplants?email=${user.email}`)
         .then(res => res.json())
         .then(data => {
@@ -37,7 +36,7 @@ const MyPlants = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(result => {
       if (result.isConfirmed) {
-        fetch(`https://plants-self-iota.vercel.app/plants/${id}`, {
+        fetch(`https://one0-85jk.onrender.com/plants/${id}`, {
           method: 'DELETE',
         })
           .then(res => res.json())
@@ -45,17 +44,21 @@ const MyPlants = () => {
             if (data.deletedCount > 0) {
               setPlants(plants.filter(plant => plant._id !== id));
               Swal.fire('Deleted!', 'Your plant has been deleted.', 'success');
+            } else {
+              Swal.fire('Error', 'Delete failed', 'error');
             }
+          })
+          .catch(() => {
+            Swal.fire('Error', 'Failed to delete plant', 'error');
           });
       }
     });
   };
 
   const handleUpdate = (id) => {
-    navigate(`/update/${id}`);
+    navigate(`/dashbord/update/${id}`);
   };
 
-  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">

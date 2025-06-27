@@ -5,14 +5,12 @@ import { Tooltip } from "react-tooltip";
 import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
 import Loader from "../components/Loader";
-import { ThemeContext } from "../Context/ThemeProvider ";
-
-
+// import { ThemeContext } from "../Context/ThemeProvider ";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logOut, loading } = useContext(AuthContext);
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  // const { theme, toggleTheme } = useContext(ThemeContext);
 
   const handleLogOut = () => {
     Swal.fire({
@@ -35,26 +33,23 @@ const Navbar = () => {
     `hover:text-green-600 transition duration-200 ${isActive ? "text-green-700 font-semibold underline underline-offset-4" : ""}`;
 
   return (
-    <nav className="bg-green-50 dark:bg-gray-900 dark:text-white border-b dark:border-gray-700 border-green-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+    <nav className="bg-white border-b border-green-200 shadow-sm fixed top-0 w-full z-50">
+      <div className=" px-5 lg:px-0 max-w-7xl mx-auto flex justify-between items-center py-5">
 
         <div className="flex items-center space-x-2">
           <Leaf className="text-green-600 dark:text-green-400" />
-          <span className="text-2xl font-bold text-green-800 dark:text-white">Botanico</span>
+          <span className="text-2xl font-bold text-black ">Botanico</span>
         </div>
 
-        <div className="hidden md:flex space-x-8 text-sm font-medium">
+        <div className="hidden md:flex space-x-8 text-[16px] font-medium">
           <NavLink to="/" className={navLinkClass}>Home</NavLink>
           <NavLink to="/all-plants" className={navLinkClass}>All Plants</NavLink>
-          <NavLink to="/add-plant" className={navLinkClass}>Add Plant</NavLink>
-          <NavLink to="/my-plants" className={navLinkClass}>My Plants</NavLink>
+          <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+          <NavLink to="/dashbord" className={navLinkClass}>Dashbord</NavLink>
         </div>
 
         <div className="hidden md:flex items-center space-x-4">
           <Search className="text-green-700 dark:text-green-300" />
-          <button onClick={toggleTheme} className="text-green-700 dark:text-green-300">
-            {theme === "light" ? <Moon /> : <Sun />}
-          </button>
           {!loading && user && (
             <Link to="/profile">
               <img
@@ -82,42 +77,60 @@ const Navbar = () => {
           )}
         </div>
 
+        {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X /> : <Menu />}
+          <button onClick={() => setMenuOpen(true)}>
+            <Menu />
           </button>
         </div>
       </div>
 
+      {/* Overlay */}
       {menuOpen && (
-        <div className="md:hidden px-4 pb-4 flex flex-col space-y-2 text-sm font-medium">
+        <div className="fixed inset-0 z-40 backdrop-blur-md bg-white/20 bg-opacity-30" onClick={() => setMenuOpen(false)}></div>
+      )}
+
+      {/* Sliding Mobile Menu */}
+      <div className={`fixed top-0 left-0 w-64 h-full bg-white dark:bg-gray-900 text-black dark:text-white transform transition-transform duration-300 z-50 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+          <div className="flex items-center space-x-2">
+            <Leaf className="text-green-600 dark:text-green-400" />
+            <span className="text-xl font-bold">Botanico</span>
+          </div>
+          <button onClick={() => setMenuOpen(false)}>
+            <X className="text-black dark:text-white" />
+          </button>
+        </div>
+
+        <nav className="flex flex-col p-4 space-y-4 text-base font-medium">
           <NavLink to="/" onClick={() => setMenuOpen(false)} className={navLinkClass}>Home</NavLink>
           <NavLink to="/all-plants" onClick={() => setMenuOpen(false)} className={navLinkClass}>All Plants</NavLink>
-          <NavLink to="/add-plant" onClick={() => setMenuOpen(false)} className={navLinkClass}>Add Plant</NavLink>
-          <NavLink to="/my-plants" onClick={() => setMenuOpen(false)} className={navLinkClass}>My Plants</NavLink>
-          <button onClick={toggleTheme}>
-            {theme === "light" ? "Dark Mode" : "Light Mode"}
-          </button>
-          {!loading && user && (
-            <Link to="/profile">
-              <img
-                src={user.photoURL}
-                alt="User"
-                className="w-8 h-8 rounded-full border border-green-300"
-              />
-            </Link>
-          )}
-          {!loading ? (
-            user ? (
-              <button onClick={handleLogOut} className="block text-red-600">Logout</button>
+          <NavLink to="/contact" onClick={() => setMenuOpen(false)} className={navLinkClass}>Contact</NavLink>
+          <NavLink to="/dashbord" onClick={() => setMenuOpen(false)} className={navLinkClass}>Dashbord</NavLink>
+
+          <div className="mt-4">
+            {!loading ? (
+              user ? (
+                <>
+                  <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center space-x-2">
+                    <img src={user.photoURL} alt="User" className="w-8 h-8 rounded-full border border-green-300" />
+                    <span>{user.displayName}</span>
+                  </Link>
+                  <button onClick={() => { setMenuOpen(false); handleLogOut(); }} className="mt-3 btn bg-green-600 text-white rounded px-4 py-1 w-full">
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" onClick={() => setMenuOpen(false)} className="btn bg-green-600 text-white rounded px-4 py-1 w-full">
+                  Login
+                </Link>
+              )
             ) : (
-              <Link to="/login" className="block text-green-600">Login</Link>
-            )
-          ) : (
-            <Loader />
-          )}
-        </div>
-      )}
+              <Loader />
+            )}
+          </div>
+        </nav>
+      </div>
     </nav>
   );
 };
